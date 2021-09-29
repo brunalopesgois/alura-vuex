@@ -1,20 +1,21 @@
 <template>
   <div class="container">
-    <h1>Novo usuário</h1>
-    <form @submit.prevent="enviarFormulario">
+    <h1>Login</h1>
+    <form @submit.prevent="efetuarLogin">
       <div class="form-group">
-        <label for="nome">Nome</label>
-        <input type="text" class="form-control" v-model="usuario.nome">
-      </div>
-      <div class="form-group">
-        <label for="email">E-mail</label>
+        <label for="email">Email</label>
         <input type="email" class="form-control" v-model="usuario.email">
       </div>
       <div class="form-group">
         <label for="senha">Senha</label>
         <input type="password" class="form-control" v-model="usuario.senha">
       </div>
-      <button class="btn btn-primary" type="submit">Salvar</button>
+      <button type="submit" class="btn btn-primary brn-block">
+        Logar
+      </button>
+      <router-link :to="{ name: 'novo.usuario' }">
+        Não possui um cadastro, cadastre-se aqui!
+      </router-link>
     </form>
   </div>
 </template>
@@ -24,18 +25,18 @@ export default {
   data() {
     return {
       usuario: {
-        nome: '',
-        senha: '',
-        email: ''
+        email: '',
+        senha: ''
       }
     }
   },
   methods: {
-    enviarFormulario() {
-      this.$http.post('auth/register', this.usuario)
+    efetuarLogin() {
+      this.$http.post('auth/login', this.usuario)
         .then(res => {
           console.log(res);
-          this.$router.push({ name: 'login' });
+          localStorage.setItem('token', res.data.access_token);
+          this.$router.push({ name: 'gerentes' })
         })
         .catch(e => console.log(e));
     }
