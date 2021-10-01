@@ -10,6 +10,7 @@
         <label for="senha">Senha</label>
         <input type="password" class="form-control" v-model="usuario.senha">
       </div>
+      <p class="alert alert-danger" v-if="mensagemErro">{{ mensagemErro }}</p>
       <button type="submit" class="btn btn-primary brn-block">
         Logar
       </button>
@@ -27,14 +28,24 @@ export default {
       usuario: {
         email: '',
         senha: ''
-      }
+      },
+      mensagemErro: ''
     }
   },
   methods: {
     efetuarLogin() {
       this.$store.dispatch('efetuarLogin', this.usuario)
-        .then(() => this.$router.push({ name: 'gerentes' }))
-        .catch(e => console.log(e));
+        .then(() => {
+          this.$router.push({ name: 'gerentes' });
+          this.mensagemErro = '';
+        })
+        .catch(e => {
+          console.log(e);
+          if (e.request.status === 401) {
+            this.mensagemErro = 'E-mail ou senha inválido(s)';
+          }
+        });
+
       // this.$http.post('auth/login', this.usuario)
       //   .then(res => {
       //     console.log(res);
