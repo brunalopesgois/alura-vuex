@@ -35,7 +35,15 @@ export default {
       this.$http.post('auth/login', this.usuario)
         .then(res => {
           console.log(res);
-          localStorage.setItem('token', res.data.access_token);
+          // localStorage.setItem('token', res.data.access_token);
+          // Não é possível alterar o estado diretamente, necessário usar mutations,
+          // código abaixo para exemplificar:
+          // this.$store.state.token = res.data.access_token;
+          // this.$store.state.usuario = res.data.user;
+          this.$store.commit('DEFINIR_USUARIO_LOGADO', {
+            token: res.data.access_token,
+            usuario: res.data.user
+          });
           this.$router.push({ name: 'gerentes' })
         })
         .catch(e => console.log(e));
